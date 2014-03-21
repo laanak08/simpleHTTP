@@ -1,0 +1,162 @@
+/*font: font-style font-variant font-weight font-size/line-height;*/
+#pageContainer {
+	margin: auto;
+	overflow: auto;
+	width: 92%;
+}
+
+#headerHover {
+	display: table;
+}
+
+header {
+	color: #FFF;
+	/*background-color: #669999;*/
+	/*background-color: #e7e7e7;*/
+	background-color: #222;
+	padding: 5px;
+	border-style: solid;
+	border-width: 3px;
+	border-color: #5a5a5a;
+	margin-bottom: 15px;
+}
+
+
+#pageBody {
+	/*background-color: #669999;*/
+	/*background-color: #e7e7e7;*/
+	background-color: #222;
+	border-style: solid;
+	border-width: 3px;
+	border-color: #5a5a5a;
+	padding: 10px;
+}
+
+#leftPage {
+	float: left;
+}
+
+/*#svcList {
+	padding: 5px;
+	background-color: #FCDC9B;
+	color: #000;
+	float: left;
+	clear: both;
+	box-shadow: 2px 2px 5px #000;
+}*/
+
+.labelNode > span {
+	float: left;
+}
+
+.dataNode > * {
+	padding-left: 2em;
+	text-align: left;
+}
+
+#rightPage {
+	float: right;
+}
+
+#searchForm , #searchSuggest, hr {
+	float: left;
+	background-color: #FF3300;
+	margin: 5px;
+}
+
+form /*,
+#searchResultsSection,
+#suggestLabel,
+#suggest*/ {
+	overflow: auto;
+	display: table;
+	font: 200 16px/1.5 Helvetica, Verdana, sans-serif;
+	color: #000;
+	text-align: left;
+	background-color: #FFF;
+	padding: 10px;
+	margin: 10px;
+	box-shadow: 2px 2px 5px #000;
+}
+
+.singleSearchResult, .svcBox {
+	overflow: auto;
+	font: 200 16px/1.5 Helvetica, Verdana, sans-serif;
+	color: #000;
+	text-align: center;
+	background-color: #FFF;
+	padding: 10px;
+	margin: 20px;
+	box-shadow: 2px 2px 5px #000;
+}
+
+label {
+	margin: 2.5px;
+}
+
+#searchResults > div {
+	border-style: solid;
+	border-width: 3px;
+	border-color: #5a5a5a;
+	margin: 5px;
+	padding: 3px;
+}
+
+footer {
+	font: 200 10px/1.5 Helvetica, Verdana, sans-serif;
+	color: #131313;
+	background-color: #FFF;
+	text-align: center;
+}
+
+* {
+	overflow: auto;
+	margin: 0 auto 0 auto;
+	padding: 0;
+}
+
+.hover {
+	text-align: center;
+	color: #FFF;
+	font: 200 20px/1.5 Helvetica, Verdana, sans-serif;
+	padding: 1em;
+	background-color: #FF3300;
+/*	opacity: 0.8;
+	filter:alpha(opacity=80);*/ /*For IE8 and earlier*/
+	box-shadow: 2px 2px 5px #FFF;
+}
+
+/*ul.ui-autocomplete {
+	border: 0px;
+	background-color: #FFF;
+	position: absolute;
+	top: 0;
+
+}*/
+/*.ui-menu .ui-menu-item { 
+	margin:0; 
+	padding: 0; 
+	zoom: 0; 
+	float: left; 
+	clear: left; 
+	width: 100%; 
+}*/
+
+.vLineSeparator {
+	float: left;
+	height: 10px;
+	width: 1px;
+	border-left-style: solid;
+	border-left-width: 1px;
+	border-left-color: #ccc;
+	margin: 0 20px;
+}
+
+.hLineSeparator {
+	float: left;
+	width: 1px;
+	border-left-style: solid;
+	border-left-width: 1px;
+	border-left-color: #ccc;
+	margin: 0 20px;
+}

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" />
+	<link rel="stylesheet" href="./style.css" />
+	<!-- <link rel="stylesheet" href="./alt.css" /> -->
+</head>
+<body>
+	<article id="pageContainer">
+		<header>
+			<div id="headerHover" class="hover">
+				<h1>Storage Volume Information Sheet</h1>
+			</div>
+				<h4>Note: </h4>
+				<h5>All sizes are in GB.</h5>
+		</header>
+		<section id="pageBody">
+			<div id="leftPage" class="hover"><div id='svcList'></div></div>
+
+			<div id="rightPage" class="hover">
+				<div id='searchForm'>
+					<form>
+						<label for="query">Search</label>
+						<input type="text" size="50" id="query" autocomplete="off" />
+						<div>Query: <span id='searchQuery'></span></div>
+						<div>Results Returned: <span id='numResultsRet'></span></div>
+					</form>
+
+					<!-- <div class="hLineSeparator"></div> -->
+					
+					<div id='searchResultsSection'>
+						<div id='resultsLabel'><div id='searchResults'></div></div>
+					</div>
+				</div>
+
+				<!-- <hr width="1" size="500"></hr> -->
+				<!-- <div class="vLineSeparator"></div> -->
+
+<!-- 				<aside id="searchSuggest">
+					<div id="suggestLabel">Search Suggestions</div>
+					
+					<div class="hLineSeparator"></div>
+
+					<div id="suggest"></div>
+				</aside> -->
+			</div>
+
+		</section>
+		<footer><p>@ 2014 Reed Elsevier Technology Services.</p></footer>
+	</article>
+
+	<!-- Javascript includes -->
+	<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js'></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+	<!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js"></script> -->
+	<!-- control.js must be above data_web.js because data_web.js uses a variable that control.js declares -->
+	<script src="./control.js"></script>
+	<script src="./data_web.js"></script>
+</body>
+</html>
