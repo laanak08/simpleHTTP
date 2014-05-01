@@ -1,0 +1,24 @@
+################################
+#  These vdisks have no hosts
+#       vdisk => size
+#################################
+$VAR1 = {
+          'MBG6000_SHARED_DAT_RVOL012' => '512.00GB',
+          'MBG6000_SHARED_DAT_RVOL005' => '512.00GB',
+          'MBG6000_SHARED_DAT_RVOL016' => '512.00GB',
+          'MBG6000_SHARED_DAT_RVOL006' => '512.00GB',
+          'MBG6000_SHARED_DAT_RVOL015' => '512.00GB',
+          'MBG6000_SHARED_DAT_RVOL011' => '512.00GB',
+          'MBG6000_SHARED_DAT_RVOL013' => '512.00GB',
+          'MBG6000_SHARED_DAT_RVOL007' => '512.00GB',
+          'MBG6000_SHARED_DAT_RVOL002' => '512.00GB',
+          'MBG6000_SHARED_DAT_RVOL003' => '512.00GB',
+          'MBG6000_SHARED_DAT_RVOL004' => '512.00GB',
+          'MBG6000_SHARED_DAT_RVOL001' => '512.00GB',
+          'MBG6000_SHARED_DAT_RVOL014' => '512.00GB',
+          'MBG6000_SHARED_DAT_RVOL008' => '512.00GB',
+          'MBG6000_SHARED_DAT_RVOL017' => '512.00GB',
+          'MBG6000_SHARED_DAT_RVOL009' => '512.00GB',
+          'MBG6000_SHARED_DAT_RVOL010' => '512.00GB'
+        };
+
