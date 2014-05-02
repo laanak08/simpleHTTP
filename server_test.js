@@ -1,7 +1,7 @@
 #!/usr/bin/supervisor
 //#!/usr/local/bin/node
 
-var server = require('./newServer');
+var server = require('./server');
 
 server.set('port',process.env.PORT || 3000);
 

@@ -4,79 +4,147 @@
 var http = require('http'),
 	parse = require('url').parse,
 	join = require('path').join,
-	root = __dirname,
 	fs = require('fs'),
 	readline = require('readline');
 
-http.createServer(handle_requests).listen(3000,function(){
-	console.log("Server listening on port 3000");
-});
+var config = {
+	port : 3000,
+	behavior : req_handler,
+	endpoints : {
+		get : {},
+		post : {}
+	},
+	static_files : '.',
+	root : __dirname
+};
 
-function handle_requests(request,response){
-	var url = parse(request.url),
-		path = join(root, url.pathname);
+exports.run_server = function(){
+	// console.log('initializing static dir with: ' + config.static_files );
+	init_static_files_dir( config.static_files );
+	http.createServer( config.behavior ).listen(config.port, function(){
+		console.log("Server listening on port: " + config.port);
+	});
+};
 
-	// console.log(request.method);
-	var searchRE = /search/gi;
-	if( searchRE.exec(request.url) ){
-		
-		var data = [];
-		var item = '';
-		request.setEncoding('utf8');
-		request.on('data',function(chunk){
-			item += chunk;
+
+exports.set = function(param,value){
+	if( 'static_files' === param ){
+		var path = join(config.root, value);
+
+		fs.stat(path, function(err,stat){
+			if(err){ 
+				console.log('static files dir does not exist'); 
+			} else {
+				config[param] = value;
+			}
 		});
-
-		request.on('end',function(){
-			// data.push(item);
-			// console.log(item);
-			// console.log(data);
-			var queryObj = JSON.parse(item);
-			var svc = queryObj.svc;
-			var box = queryObj.box;
-			// var boxData = data[ svc ][ box ];
-			// response.end( JSON.stringify(boxData) );
-			response.end( svc + ' ' + box);
-		});
+	} else {
+		config[param] = value;
 	}
+};
+
+exports.get = function(apiEndpoint, fn){
+	if( 1 === arguments.length ){
+		console.log('one arg to get');
+		config.endpoints.get[apiEndpoint] = 'static';
+	}else {
+		if( 'function' === typeof fn ){
+			config.endpoints.get[apiEndpoint] = fn;
+		}
+	}
+
+};
+
+exports.post = function(apiEndpoint, fn){
+	if( 2 > arguments.length ){
+		console.log('Too few arguments to post endpoint handler');
+	} else {
+		if( 'function' === typeof fn ){
+			config.endpoints.post[apiEndpoint] = fn;
+		}
+	}
+
+};
+
+function req_handler(req,res){
+	var	url = req.url;
+
+	if( config.endpoints.get[url] && 'static' === config.endpoints.get[url] ) {
+		console.log(url);
+		serve_static(req,res);
+	} else if( config.endpoints.get[url] ) {
+		console.log(url);
+		config.endpoints.get[url](req,res);
+	} else if( config.endpoints.post[url] ) {
+		console.log(url);
+		config.endpoints.post[url](req,res);
+	} else {
+		console.log(url);
+		console.log("endpoint has no defined behaivor");
+	}
+}
+
+function serve_static(req,res){
+	var url = parse(req.url),
+		path = join(config.root, url.pathname);
 
 	fs.stat(path, function(err,stat){
 		if(err){
 			
 			if( 'ENOENT' === err.code ){
-				// response.statusCode = 404;
-				// response.end('ENOENT: ' + path);
+				// res.statusCode = 404;
+				// res.end('ENOENT: ' + path);
 			} else {
-				response.statusCode = 500;
-				response.end('Unknow server fault in delivering: ' + path);
+				res.statusCode = 500;
+				res.end('Unknown server fault in delivering: ' + path);
 			}
 		} else {
-			response.setHeader('Content-Length',stat.size);
+			res.setHeader('Content-Length',stat.size);
 
+			// FIXME: codesmell
 			if( /\.js/.exec(path)){
-				response.writeHead( 
+				res.writeHead( 
 					200, 
 					{ "Content-Type": "text/javascript" }
 				);
 			}else if(/\.css/.exec(path)){
-				response.writeHead( 
+				res.writeHead( 
 					200, 
 					{ "Content-Type": "text/css" }
 				);
 			}else{
-				// response.writeHead( 200, { "Content-Type": "text/html" });	
+				// res.writeHead( 200, { "Content-Type": "text/html" });	
 			}
+			// FIXME: end codesmell
 
 			var stream = fs.createReadStream(path);
 
-			stream.pipe(response);
-			// stream.on('data',function(chunk){
-			// response.write(chunk);
-			// });
+			stream.pipe(res);
 			
 			stream.on('error',function(err){
-				response.statusCode = 500;
-				response.end('Trouble streaming: ' + path);
+				res.statusCode = 500;
+				res.end('Trouble streaming: ' + path);
+			});
+		}
+	});
+}
+
+function init_static_files_dir(startDir){
+	var	path = join(config.root, startDir);
+	// console.log('path used: ' + path);
+	fs.readdir(path,function(err,files){
+		if(err){
+			console.log('could not read static files dir');
+		} else {
+			files.forEach(function(item){
+				fs.stat( path+'/'+item ,function(err,stats){
+					if( stats.isFile() ) {
+						exports.get('/'+item);
+						console.log(item + ' added static');
+					} else if( stats.isDirectory() ){
+						// init_static_files_dir( path+'/'+item );
+					}
+				});
 			});
 		}
 	});
