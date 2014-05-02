@@ -1,23 +1,32 @@
 #!/usr/bin/supervisor
 //#!/usr/local/bin/node
 
-var server = require('./server');
+var server = require('./newServer');
 
 server.set('port',process.env.PORT || 3000);
 
+server.set('static_files','.');
+
+server.get('/',function(){
+	console.log('/ accessed');
+});
+
+server.get('/index.html');
+
 server.get('/home',function(){
-	console.log('home accessed');
+	console.log('/home accessed');
 });
 
 server.get('/contact',function(){
-	console.log('contact accessed');
+	console.log('/contact accessed');
 });
 
 server.post('/search',function(){
-	console.log('search accessed');
+	console.log('/search accessed');
 });
 
 server.run_server();
+
 /*
 	var searchRE = /search/gi;
 	if( searchRE.exec(req.url) ){

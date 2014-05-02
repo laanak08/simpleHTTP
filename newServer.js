@@ -4,7 +4,6 @@
 var http = require('http'),
 	parse = require('url').parse,
 	join = require('path').join,
-	root = __dirname,
 	fs = require('fs'),
 	readline = require('readline');
 
@@ -14,22 +13,39 @@ var config = {
 	endpoints : {
 		get : {},
 		post : {}
-	}
+	},
+	static_files : '.',
+	root : __dirname
 };
 
-exports.run_server = function run_server(){
-	http.createServer(config.behavior).listen(config.port,function(){
+exports.run_server = function(){
+	// console.log('initializing static dir with: ' + config.static_files );
+	init_static_files_dir( config.static_files );
+	http.createServer( config.behavior ).listen(config.port, function(){
 		console.log("Server listening on port: " + config.port);
 	});
 };
 
 
-exports.set = function set(param,value){
-	config[param] = value;
+exports.set = function(param,value){
+	if( 'static_files' === param ){
+		var path = join(config.root, value);
+
+		fs.stat(path, function(err,stat){
+			if(err){ 
+				console.log('static files dir does not exist'); 
+			} else {
+				config[param] = value;
+			}
+		});
+	} else {
+		config[param] = value;
+	}
 };
 
-exports.get = function get(apiEndpoint, fn){
+exports.get = function(apiEndpoint, fn){
 	if( 1 === arguments.length ){
+		console.log('one arg to get');
 		config.endpoints.get[apiEndpoint] = 'static';
 	}else {
 		if( 'function' === typeof fn ){
@@ -39,7 +55,7 @@ exports.get = function get(apiEndpoint, fn){
 
 };
 
-exports.post = function post(apiEndpoint, fn){
+exports.post = function(apiEndpoint, fn){
 	if( 2 > arguments.length ){
 		console.log('Too few arguments to post endpoint handler');
 	} else {
@@ -54,19 +70,23 @@ function req_handler(req,res){
 	var	url = req.url;
 
 	if( config.endpoints.get[url] && 'static' === config.endpoints.get[url] ) {
+		console.log(url);
 		serve_static(req,res);
 	} else if( config.endpoints.get[url] ) {
+		console.log(url);
 		config.endpoints.get[url](req,res);
 	} else if( config.endpoints.post[url] ) {
+		console.log(url);
 		config.endpoints.post[url](req,res);
 	} else {
+		console.log(url);
 		console.log("endpoint has no defined behaivor");
 	}
 }
 
 function serve_static(req,res){
 	var url = parse(req.url),
-		path = join(root, url.pathname);
+		path = join(config.root, url.pathname);
 
 	fs.stat(path, function(err,stat){
 		if(err){
@@ -81,6 +101,7 @@ function serve_static(req,res){
 		} else {
 			res.setHeader('Content-Length',stat.size);
 
+			// FIXME: codesmell
 			if( /\.js/.exec(path)){
 				res.writeHead( 
 					200, 
@@ -94,6 +115,7 @@ function serve_static(req,res){
 			}else{
 				// res.writeHead( 200, { "Content-Type": "text/html" });	
 			}
+			// FIXME: end codesmell
 
 			var stream = fs.createReadStream(path);
 
@@ -102,6 +124,27 @@ function serve_static(req,res){
 			stream.on('error',function(err){
 				res.statusCode = 500;
 				res.end('Trouble streaming: ' + path);
+			});
+		}
+	});
+}
+
+function init_static_files_dir(startDir){
+	var	path = join(config.root, startDir);
+	// console.log('path used: ' + path);
+	fs.readdir(path,function(err,files){
+		if(err){
+			console.log('could not read static files dir');
+		} else {
+			files.forEach(function(item){
+				fs.stat( path+'/'+item ,function(err,stats){
+					if( stats.isFile() ) {
+						exports.get('/'+item);
+						console.log(item + ' added static');
+					} else if( stats.isDirectory() ){
+						// init_static_files_dir( path+'/'+item );
+					}
+				});
 			});
 		}
 	});
